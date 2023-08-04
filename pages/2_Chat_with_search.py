@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 from langchain.agents import initialize_agent, AgentType, Tool
@@ -57,3 +56,4 @@ if prompt := st.chat_input(placeholder="The best places in the world for ducks")
         response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.write(response)
+
