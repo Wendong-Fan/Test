@@ -1,18 +1,18 @@
 
 import streamlit as st
 
-from langchain.agents import initialize_agent, AgentType
+from langchain.agents import initialize_agent, AgentType, Tool
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.chat_models import AzureChatOpenAI
 from langchain.tools import DuckDuckGoSearchRun
-from PIL import Image
+from langchain.memory import ConversationBufferMemory
+
 
 key1 = st.secrets["key1"]
 
  
 st.title("🧐 Dr.DuckDuck")
-#image0 = Image.open('images.jpeg')
-#st.image(image0)
+
 
 
 if "messages" not in st.session_state:
@@ -36,8 +36,22 @@ if prompt := st.chat_input(placeholder="The best places in the world for ducks")
                     model_name="gpt-35-turbo", 
                     streaming=True)
  
-    search = DuckDuckGoSearchRun(name="Search")
-    search_agent = initialize_agent([search], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handle_parsing_errors=True)
+    duck_search = DuckDuckGoSearchRun()
+
+    tools = [
+    Tool(
+        name = "DuckDuckGoSearch",
+        func = duck_search.run,
+        description = "useful when you need to answer questions that you don't know"
+    )
+]
+
+    memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+    search_agent = initialize_agent(tools, llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True
+                                , memory=memory)
+
+
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
         response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
