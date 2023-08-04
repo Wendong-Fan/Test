@@ -10,20 +10,20 @@ from PIL import Image
 key1 = st.secrets["key1"]
 
  
-st.title("🧐 小佛陀")
+st.title("🧐 Dr.DuckDuck")
 #image0 = Image.open('images.jpeg')
 #st.image(image0)
 
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "assistant", "content": "我是一股无形的智慧之力，能洞察世间万物，解答你心中的疑惑。我在你的思考中存在，引导你走向真理与和平。"}
+        {"role": "assistant", "content": "Hi, I'm a chatbot who can search the web. How can I help you?"}
     ]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
-if prompt := st.chat_input(placeholder="宇宙的起源是什么"):
+if prompt := st.chat_input(placeholder="The best places in the world for ducks"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
 
