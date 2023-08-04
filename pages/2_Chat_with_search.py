@@ -27,7 +27,15 @@ if prompt := st.chat_input(placeholder="宇宙的起源是什么"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
 
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key, streaming=True)
+    llm = AzureChatOpenAI(
+                    openai_api_base = "https://azureopenai-mutiagent.openai.azure.com/",
+                    openai_api_version = "2023-03-15-preview",
+                    openai_api_key = key1,
+                    openai_api_type = "azure",
+                    deployment_name="gpt-35-turbo",
+                    model_name="gpt-35-turbo", 
+                    streaming=True)
+ 
     search = DuckDuckGoSearchRun(name="Search")
     search_agent = initialize_agent([search], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handle_parsing_errors=True)
     with st.chat_message("assistant"):
