@@ -9,9 +9,6 @@ from PIL import Image
 
 key1 = st.secrets["key1"]
 
-
-with st.sidebar:
-    openai_api_key = st.text_input("OpenAI API Key", key="langchain_search_api_key_openai", type="password")
  
 st.title("🧐 小佛陀")
 #image0 = Image.open('images.jpeg')
@@ -29,10 +26,6 @@ for msg in st.session_state.messages:
 if prompt := st.chat_input(placeholder="宇宙的起源是什么"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
 
     llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key, streaming=True)
     search = DuckDuckGoSearchRun(name="Search")
